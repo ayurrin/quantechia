@@ -1,0 +1,11 @@
+pandas
+yfinance
+alpha_vantage
+numpy
+scipy
+matplotlib
+plotly
+seaborn
+arelle-release
+pandas-datareader
+cvxpy
