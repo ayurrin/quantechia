@@ -1,0 +1,1 @@
+# World Bank データ取得

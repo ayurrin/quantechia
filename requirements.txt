@@ -9,3 +9,4 @@ seaborn
 arelle-release
 pandas-datareader
 cvxpy
+python-dotenv

@@ -1,0 +1,1 @@
+# Global Factor Data データ取得

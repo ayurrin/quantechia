@@ -1,0 +1,1 @@
+# Yahoo Finance データ取得
