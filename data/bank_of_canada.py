@@ -1,1 +1,0 @@
-# Bank of Canada データ取得
