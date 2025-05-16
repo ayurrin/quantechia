@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  python-dev:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "8888:8888"  # Jupyter用
+    stdin_open: true
+    tty: true

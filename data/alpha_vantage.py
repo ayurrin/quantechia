@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 from io import StringIO
 
-def get_data(function, api_key, params=None, is_df=True, df_name=None, csv=False):
+def get_data(function, api_key, is_df=True, df_name=None, csv=False, **params):
     # ベースURL
     base_url = f'https://www.alphavantage.co/query?function={function}'
     
@@ -22,7 +22,7 @@ def get_data(function, api_key, params=None, is_df=True, df_name=None, csv=False
         url = base_url
     
     url += f'&apikey={api_key}'
-    print(url)
+
     if csv:
         with requests.Session() as s:
             download = s.get(url)

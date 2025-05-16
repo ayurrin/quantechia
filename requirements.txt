@@ -11,3 +11,5 @@ pandas-datareader
 cvxpy
 python-dotenv
 httpx
+factor_analyzer
+git+https://github.com/ayurrin/quantstats.git

@@ -20,7 +20,7 @@ class InvestingDataFetcher:
     def __init__(self, email):
         self.email = email
 
-    def generate_url(self, product, **kwargs):
+    def generate_url(self, product='stock', **kwargs):
         if product not in self.REQUIRED_PARAMS:
             raise ValueError("Invalid product specified.")
 
@@ -31,8 +31,9 @@ class InvestingDataFetcher:
         params = urllib.parse.urlencode(kwargs)
         return f"{self.BASE_URL}?email={self.email}&product={product}&{params}"
 
-    def get_data(self, params):
+    def get_data(self, **params):
         url = self.generate_url(**params)
+        print(url)
         res = req.get(url, timeout=60)
 
         if res.text.lower() in ('email verification sent.', 'email address not verified.'):
@@ -55,11 +56,11 @@ class InvestingDataFetcher:
             'last_open': 'Open',
             'last_max': 'High',
             'last_min': 'Low',
-            'volumeRaw': 'Vol',
+            'volumeRaw': 'Volume',
             'change_precent': 'Change'
         }, inplace=True)
 
         df['Date'] = pd.to_datetime(raw_df['rowDateTimestamp']).dt.strftime('%Y-%m-%d')
-        return df
+        return df.set_index('Date')
 
 
