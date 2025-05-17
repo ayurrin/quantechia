@@ -2,6 +2,8 @@ import requests
 import pandas as pd
 from io import StringIO
 
+# from quantechia.strategies import basestrategy  # Remove this line
+
 def get_data(function, api_key, is_df=True, df_name=None, csv=False, **params):
     # ベースURL
     base_url = f'https://www.alphavantage.co/query?function={function}'

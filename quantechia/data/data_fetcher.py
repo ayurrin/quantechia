@@ -3,8 +3,8 @@
 import importlib
 import os
 from dotenv import load_dotenv
-from data.alpha_vantage import get_data
-from data import edinet, edinet_lifetechia, edgar, fred, investing, tiingo
+from .alpha_vantage import get_data
+from . import alpha_vantage, edinet, edinet_lifetechia, edgar, fred, investing, tiingo
 
 import yfinance as yf
 import pandas_datareader as web
@@ -16,7 +16,7 @@ import time
 import numpy as np
 
 import importlib
-from data import alpha_vantage
+
 importlib.reload(alpha_vantage)
 load_dotenv()
 

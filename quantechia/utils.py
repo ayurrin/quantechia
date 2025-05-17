@@ -1,7 +1,4 @@
 import pandas as pd
-import numpy as np
-import quantstats
-
 def calculate_returns(rtn_data, weight_data, shift_num=1, cost=True, cost_unit=0.0005) -> pd.DataFrame:
     """
     リターンを計算する。
@@ -17,7 +14,7 @@ def calculate_returns(rtn_data, weight_data, shift_num=1, cost=True, cost_unit=0
     else:
     
         returns = weight_data.shift(shift_num) * rtn_data
-    
+    returns = returns.iloc[shift_num:]
 
     return returns, pd.DataFrame(returns.sum(axis=1))
 
@@ -104,60 +101,3 @@ def calculate_winning_rate( returns: pd.DataFrame) -> float:
     winning_rate = winning_days / total_days
 
     return winning_rate
-
-class BacktestEngine:
-    def __init__(self, price_data: pd.DataFrame, weight_data: pd.DataFrame, initial_capital: float = 1):
-        """
-        バックテストエンジン。
-
-        Args:
-            price_data (pd.DataFrame): 価格データ。各列が銘柄、各行が日付。
-            weight_data (pd.DataFrame): ウェイトデータ。各列が銘柄、各行が日付。
-            trade_units (pd.Series): 各銘柄の取引単位。
-            initial_capital (float): 初期資本。
-            **kwargs: 戦略関数の引数。
-        """
-        self.initial_capital = initial_capital
-        self.price_data = price_data
-        self.weight_data = weight_data
-        self.portfolio = None
-        self.returns = None
-        self.rtn_data = self.price_data.pct_change()
-
-    def run(self, shift_num=1, cost=True, cost_unit=0.0005):
-        """
-        バックテストを実行する。
-        """
-       
-        # リターンを計算
-        self.returns_by_asset, self.returns = calculate_returns(self.rtn_data, self.weight_data, shift_num, cost, cost_unit)
-
-        # ポートフォリオを計算
-        self.portfolio = calculate_portfolio(self.returns_by_asset, self.initial_capital)
-
-    
-    def evaluate(self, report_path=None, **kwargs) -> dict:
-        """
-        パフォーマンスを評価する。
-        """
-        # シャープレシオを計算
-        sharpe_ratio = calculate_sharpe_ratio(self.returns)
-
-        # 最大ドローダウンを計算
-        max_drawdown = calculate_max_drawdown(self.portfolio)
-
-        # 勝率を計算
-        winning_rate = calculate_winning_rate(self.returns)
-        if report_path:
-            try:
-                quantstats.reports.html(self.returns.iloc[:,0],output=report_path, **kwargs)
-            except:
-                print('Report Error')
-        return {
-            "sharpe_ratio": sharpe_ratio,
-            "max_drawdown": max_drawdown,
-            "winning_rate": winning_rate,
-        }
-
-
-
