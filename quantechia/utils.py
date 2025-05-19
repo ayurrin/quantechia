@@ -67,7 +67,7 @@ def calculate_returns(price_data, weight_data, mode=None, shift_num=1, cost=True
     else:
         returns = calc_rtn(price_data, weight_data, shift_num, cost, cost_unit)
 
-    return returns, pd.DataFrame(returns.sum(axis=1))
+    return returns, pd.DataFrame(returns.dropna(how='all').sum(axis=1))
 
 def calculate_portfolio(returns: pd.DataFrame, initial_capital: float) -> pd.DataFrame:
     """
