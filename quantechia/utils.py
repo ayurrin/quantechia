@@ -52,7 +52,7 @@ def calc_daily_rtn(price_data, weight_data, shift_num=1, cost=True, cost_unit=0.
     
     return daily_rtn
 
-def calculate_returns(price_data, weight_data, mode=None, shift_num=1, cost=True, cost_unit=0.0005) -> pd.DataFrame:
+def calculate_return(price_data, weight_data, mode=None, shift_num=1, cost=True, cost_unit=0.0005) -> pd.DataFrame:
     """
     リターンを計算する。
 

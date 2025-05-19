@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import quantstats as qs
-from ..utils import calculate_portfolio,calculate_daily_weight, calculate_turnover, calculate_sharpe_ratio, calculate_max_drawdown, calculate_winning_rate
+from ..utils import calculate_portfolio,calculate_return, calculate_daily_weight, calculate_turnover, calculate_sharpe_ratio, calculate_max_drawdown, calculate_winning_rate
 class BaseStrategy:
     """
     Base class for all trading strategies.
@@ -32,7 +32,7 @@ class BaseStrategy:
     def calculate_daily_weight(self) -> pd.DataFrame:
         return calculate_daily_weight(self.weight, self.price_data, self.shift_num)
     
-    def calculate_returns(self, **kwargs) -> pd.DataFrame:
+    def calculate_rtn(self, **kwargs) -> pd.DataFrame:
         """
         Calculate the returns based on the weight and price data.
         """
@@ -44,15 +44,9 @@ class BaseStrategy:
         # Calculate returns
         if self.weight is None:
             self.calculate_weight()
-        returns = self.rtn_data * self.weight.shift(shift_num)
-        returns = returns.iloc[shift_num:]
-        # If cost is True, apply transaction costs
-        if cost:
-            transaction_costs = (self.weight.diff().abs() * cost_unit)
-            returns -= transaction_costs
-        # Calculate portfolio returns
-        self.rtn_by_asset = returns
-        self.rtn = returns.sum(axis=1)
+        # Calculate returns based on the weight and price data
+        self.rtn_by_asset, self.rtn = calculate_return(self.price_data, self.weight, mode='daily', shift_num=shift_num, cost=cost, cost_unit=cost_unit)
+        
         self.port = calculate_portfolio(self.rtn, self.initial_capital)
         self.port.name = self.strategy_name
         self.rtn.name = self.strategy_name
