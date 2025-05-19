@@ -32,7 +32,7 @@ class BaseStrategy:
     def calculate_daily_weight(self) -> pd.DataFrame:
         return calculate_daily_weight(self.weight, self.price_data, self.shift_num)
     
-    def calculate_rtn(self, **kwargs) -> pd.DataFrame:
+    def calculate_returns(self, **kwargs) -> pd.DataFrame:
         """
         Calculate the returns based on the weight and price data.
         """
