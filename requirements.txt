@@ -14,3 +14,4 @@ httpx
 factor_analyzer
 japanize-matplotlib
 riskfolio-lib
+quantstats @ git+https://github.com/ayurrin/quantstats.git
