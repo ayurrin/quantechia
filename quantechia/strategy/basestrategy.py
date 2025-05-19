@@ -59,7 +59,7 @@ class BaseStrategy:
 
         return self.rtn
 
-    def evaluate(self, report_path=None, freq='ME',**kwargs) -> dict:
+    def evaluate(self, report_path=None,display_mode=None, freq='ME',**kwargs) -> dict:
         """
         Evaluate the performance of the strategy.
         """
@@ -74,12 +74,21 @@ class BaseStrategy:
 
         turnover = calculate_turnover(self.weight, freq=freq)
 
+        rtn = self.rtn.squeeze() if isinstance(self.rtn, pd.DataFrame) else self.rtn
         if report_path:
             try:
-                rtn = self.rtn.squeeze() if isinstance(self.rtn, pd.DataFrame) else self.rtn
                 qs.reports.html(rtn, output=report_path, **kwargs)
             except Exception as e:
                 print(f'Report Error: {e}')
+        if display_mode == 'basic':
+            qs.reports.basic(rtn, **kwargs)
+        elif display_mode == 'full':
+            qs.reports.full(rtn, **kwargs)
+        elif display_mode == 'stats':
+            qs.reports.stats(rtn, **kwargs)
+        elif display_mode == 'plot':
+            qs.reports.plots(rtn, **kwargs)
+            
 
         return {
             "sharpe_ratio": sharpe_ratio,
