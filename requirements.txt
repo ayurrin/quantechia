@@ -12,4 +12,6 @@ cvxpy
 python-dotenv
 httpx
 factor_analyzer
+japanize-matplotlib
+riskfolio-lib
 git+https://github.com/ayurrin/quantstats.git

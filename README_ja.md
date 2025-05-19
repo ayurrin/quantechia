@@ -1,89 +1,57 @@
-# Qunatechia - クオンツ運用・分析のためのPythonライブラリ
+# Quantechia
 
-## 概要
-Qunatechiaは、クオンツ運用や金融分析を効率的に行うためのPythonライブラリです。
-データの取得・前処理、ファクター計算、売買戦略の実装、バックテスト、可視化などの機能を提供します。
+Quantechiaは、金融市場の分析と取引戦略のバックテストのためのPythonライブラリです。
 
-## 機能一覧
-### 1. データ取得・前処理 (`data/`)
-- 株価、為替、仮想通貨データの取得（API・CSV対応）
-- 欠損値処理、正規化、スケーリングなどの前処理
+## フォルダ構成
 
-### 2. ファクター計算 (`factor/`)
-- 移動平均（SMA、EMA、WMA）
-- モメンタム指標（RSI、MACD、Stochastic）
-- ボラティリティ指標（ATR、ボリンジャーバンド）
+### quantechia
 
-### 3. 売買戦略 (`strategies/`)
-戦略ロジックを実装して、ウェイトデータ（各時点でのウェイトのデータフレーム）を返す関数を作る
-- **リバーサル戦略**（平均回帰戦略）
-- **トレンドフォロー戦略**（ブレイクアウト戦略、モメンタム戦略）
+*   `__init__.py`: パッケージの初期化ファイル
+*   `analysis.py`: 分析ツール
+*   `utils.py`: ユーティリティ関数
+*   `data/`: データ取得モジュール
+    *   `__init__.py`
+    *   `alpha_vantage.py`: Alpha Vantageからのデータ取得
+    *   `data_fetcher.py`: データフェッチャー
+    *   `edgar.py`: EDGARからのデータ取得
+    *   `edinet_lifetechia.py`: EDINET Lifetechiaからのデータ取得
+    *   `edinet.py`: EDINETからのデータ取得
+    *   `fred.py`: FREDからのデータ取得
+    *   `investing.py`: Investing.comからのデータ取得
+    *   `tiingo.py`: Tiingoからのデータ取得
+*   `factor/`: ファクター分析モジュール
+    *   `create_factor.py`: ファクター作成
+    *   `factor_data.py`: ファクターデータ
+    *   `fama_french.py`: Fama-Frenchファクター
+    *   `fredmd.py`: FRED-MDファクター
+    *   `global_factors.py`: グローバルファクター
+    *   `momentum.py`: モメンタムファクター
+    *   `moving_average.py`: 移動平均ファクター
+    *   `volatility.py`: ボラティリティファクター
+*   `strategies/`: 取引戦略モジュール
+    *   `basestrategy.py`: 基本戦略
+    *   `risk.py`: リスク管理
+    *   `trend.py`: トレンドフォロー戦略
 
+### example
 
-### 4. バックテスト (`backtest/`)
-- ウェイトデータをもとに２つの方法でリターンを計算する
-1. ウェイト×リターンで単純にポートフォリオのリターンを計測する
-2. ウェイトデータをもとに実際の取引数量の売買という形に落とし込み、ポートフォリオのポジションデータとリターンを計算する（Aを１株買い、Bを2株売りのような）
+*   `backtest.ipynb`: バックテストの例
+*   `equal_weight_strategy_report.html`: 等加重戦略レポート
+*   `get_data.ipynb`: データ取得の例
+*   `get_factor_data.ipynb`: ファクターデータ取得の例
+*   `strategies.ipynb`: 戦略の例
 
-- パフォーマンス評価（シャープレシオ、最大ドローダウン、勝率など）
+## 説明
 
-### 5. 可視化 (`visualization/`)
-- 株価チャートとファクターのオーバーレイ
-- 戦略ごとのパフォーマンス比較
-
-## ディレクトリ構成
-```
-qunatechia/
-│── data/                # データ取得・管理
-│   ├── fetch.py         # APIやデータソースから取得
-│   ├── preprocess.py    # データの前処理
-│── factor/              # ファクター計算
-│   ├── moving_average.py
-│   ├── momentum.py
-│   ├── volatility.py
-│── strategies/          # 売買戦略の実装
-│   ├── mean_reversion.py
-│   ├── trend_following.py
-│── backtest/            # バックテスト用モジュール
-│   ├── engine.py        # バックテストのエンジン
-│   ├── metrics.py       # パフォーマンス評価指標
-│── visualization/       # 可視化
-│   ├── plot.py
-│── utils/               # ユーティリティ関数
-│   ├── config.py
-│── tests/               # ユニットテスト
-│── examples/            # サンプルコード
-│── README.md            # ライブラリの説明
-│── setup.py             # パッケージのセットアップ
-```
-
-## 使用技術
-| 機能            | ライブラリ |
-|----------------|-----------|
-| データ取得     | `pandas`, `yfinance`, `alpha_vantage` |
-| データ前処理   | `pandas`, `numpy`, `scipy` |
-| ファクター計算 | `talib`, `ta` |
-| バックテスト   | `backtrader`, `zipline` |
-| 可視化         | `matplotlib`, `plotly`, `seaborn` |
-
-## インストール方法
-```
-pip install qunatechia
-```
+このライブラリは、金融市場のデータ分析、ファクター分析、および取引戦略のバックテストに使用できます。
 
 ## 使い方
-```python
-from qunatechia.data.fetch import get_stock_data
-from qunatechia.factor.momentum import calculate_rsi
 
-# データ取得
-stock_data = get_stock_data("AAPL", start="2023-01-01", end="2023-12-31")
+1.  必要なライブラリをインストールします: `pip install -r requirements.txt`
+2.  データ取得モジュールを使用して、金融市場のデータを取得します。
+3.  ファクター分析モジュールを使用して、ファクターを作成および分析します。
+4.  取引戦略モジュールを使用して、取引戦略をバックテストします。
 
-# RSI 計算
-rsi = calculate_rsi(stock_data["close"], period=14)
-print(rsi)
-```
+## 例
 
-## ライセンス
-MIT License
-
+`example` フォルダには、ライブラリの使用例がいくつか含まれています。
