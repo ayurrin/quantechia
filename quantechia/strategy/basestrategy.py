@@ -76,12 +76,13 @@ class BaseStrategy:
         shift_num = kwargs.get('shift_num', self.shift_num)
         cost = kwargs.get('cost', self.cost)
         cost_unit = kwargs.get('cost_unit', self.cost_unit)
+        mode = kwargs.get('mode', None)
        
         # Calculate returns
         if self.weight is None:
-            self.calculate_weight()
+            self.weight = self.calculate_weight()
         # Calculate returns based on the weight and price data
-        self.rtn_by_asset, self.rtn = calculate_return(self.price_data, self.weight, mode='daily', shift_num=shift_num, cost=cost, cost_unit=cost_unit)
+        self.rtn_by_asset, self.rtn = calculate_return(self.price_data, self.weight, mode=mode, shift_num=shift_num, cost=cost, cost_unit=cost_unit)
         
         self.port = calculate_portfolio(self.rtn, self.initial_capital)
         self.port.name = self.strategy_name
@@ -102,7 +103,7 @@ class BaseStrategy:
             dict: シャープレシオ、最大ドローダウン、勝率、ターンオーバーを含む辞書。
         """
         if self.rtn is None:
-            self.calculate_returns(**kwargs)
+            self.rtn = self.calculate_returns(**kwargs)
         # Calculate Sharpe ratio
         sharpe_ratio = qs.stats.sharpe(self.rtn)
         # Calculate maximum drawdown
