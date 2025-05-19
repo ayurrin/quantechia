@@ -9,6 +9,3 @@ setup(
     packages=find_packages(include=['quantechia', 'quantechia.*']),
     install_requires=requirements,
 )
-    packages=find_packages(include=['quantechia', 'quantechia.*']),
-    install_requires=requirements,
-)

@@ -1,4 +1,4 @@
-from .basestrategy import BaseStrategy
+from .basestrategy import BaseStrategy,RebalanceStrategy
 import scipy.optimize as op
 import numpy as np
 import pandas as pd
@@ -344,4 +344,64 @@ class BlackLittermanStrategy(BaseRiskfolioStrategy):
             }
 
         return opt_params
+    
+class FactorStrategy(RebalanceStrategy):
+    """
+    ファクター制約付きポートフォリオ最適化戦略（_update_opt_params のみをオーバーライド）
+    """
+
+    def __init__(self, price_data: pd.DataFrame, factors_data: pd.DataFrame,
+                 factor_constraints: pd.DataFrame, lookback: int = 60,
+                 method_mu: str = 'hist',
+                 method_cov: str = 'hist',
+                  model: str = 'FM',
+                 rm: str = 'MV',
+                 obj: str = 'Sharpe',
+                 rf: float = 0,
+                 l: float = 0,
+                 alpha: float = 0.05,
+                 hist: bool = False,
+                 strategy_name: str = "Factor Constrained Strategy",
+                 **kwargs):
+        super().__init__(price_data, lookback=lookback,strategy_name=strategy_name, **kwargs)
+        self.factors_data = factors_data
+        self.factor_returns = factors_data.pct_change().iloc[1:]
+        self.factor_constraints = factor_constraints
+        self.method_mu = method_mu
+        self.method_cov = method_cov
+        self.model = model
+        self.rm = rm
+        self.obj = obj
+        self.rf = rf
+        self.l = l
+        self.alpha = alpha
+        self.hist = hist
+
+    def calculate_current_weight(self, window_rtn):
+        """
+        ファクター制約をポートフォリオに反映するようにopt_paramsを更新
+        """
+        port = rp.Portfolio(returns=window_rtn)
+        
+        port.assets_stats(method_mu=self.method_mu, method_cov=self.method_cov)
+
+        factors_window = self.factor_returns.loc[window_rtn.index]
+
+        port.factors = factors_window
+        port.factors_stats(method_mu=self.method_mu, method_cov=self.method_cov)
+
+        w = port.optimization(model=self.model, rm=self.rm, obj=self.obj, rf=self.rf, l=self.l, hist=self.hist)
+
+ 
+        constraints = pd.DataFrame(self.factor_constraints)
+        loadings = rp.loadings_matrix(X=factors_window, Y=window_rtn, stepwise='Forward')
+
+        C, D = rp.factors_constraints(constraints, loadings)
+
+        port.ainequality = C
+        port.binequality = D
+
+        w = port.optimization(model=self.model, rm=self.rm, obj=self.obj, rf=self.rf, l=self.l, hist=self.hist)
+        return w.values.flatten()
+
         
